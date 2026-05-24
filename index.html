@@ -15,7 +15,7 @@ body {
   font-size: 14px;
   min-height: 100vh;
 }
-.app { max-width: 920px; margin: 0 auto; }
+.app { max-width: 980px; margin: 0 auto; }
 .hazard {
   height: 6px;
   background: repeating-linear-gradient(45deg, #d97534 0 14px, #1a1a1a 14px 28px);
@@ -66,26 +66,15 @@ header {
 .stat-pill .num { font-size: 18px; font-weight: 900; color: #d4c896; }
 .stat-pill .lbl { font-size: 9px; letter-spacing: 1.5px; color: #8aaa5e; text-transform: uppercase; }
 
-/* Sync indicator */
 .sync {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 4px;
-  background: #2a3122;
-  color: #d4c896;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 1px;
+  text-transform: uppercase; font-weight: 700;
+  padding: 6px 10px; border-radius: 4px;
+  background: #2a3122; color: #d4c896;
   cursor: pointer;
 }
-.sync-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: #8aaa5e;
-}
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #8aaa5e; }
 .sync.syncing .sync-dot { background: #c89c2e; animation: pulse2 1s infinite; }
 .sync.error .sync-dot { background: #c25030; }
 .sync.idle .sync-dot { background: #8aaa5e; }
@@ -117,6 +106,66 @@ section {
   background: #d97534;
   display: inline-block;
 }
+
+/* ---- Squad Record hero ---- */
+.hero-record {
+  background: linear-gradient(135deg, #1f2418 0%, #2a3122 50%, #3d4a2e 100%);
+  color: #d4c896;
+  border: 2px solid #c89c2e;
+  border-radius: 8px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-record::before {
+  content: 'SQUAD RECORD';
+  position: absolute; top: 8px; left: 14px;
+  font-size: 9px; letter-spacing: 3px;
+  color: #c89c2e; font-weight: 900;
+}
+.hero-emoji { font-size: 64px; line-height: 1; padding-top: 8px; }
+.hero-info { padding-top: 8px; }
+.hero-name { font-size: 22px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #d4c896; }
+.hero-score { font-size: 14px; color: #8aaa5e; margin-top: 4px; font-weight: 700; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.hero-elim { text-align: center; }
+.hero-elim-num {
+  font-size: 56px; font-weight: 900; line-height: 1;
+  color: #f0d77a;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.hero-elim-lbl { font-size: 10px; letter-spacing: 2px; color: #c89c2e; font-weight: 800; }
+
+/* ---- Submit form ---- */
+.submit-form {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: end;
+}
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #5a6b3e;
+}
+.field input, .field select {
+  padding: 8px 10px;
+  border: 1px solid #c4b896;
+  border-radius: 3px;
+  font-size: 14px;
+  background: #faf7ed;
+  width: 100%;
+}
+.field input:focus, .field select:focus { outline: 2px solid #5a6b3e; outline-offset: -1px; }
+
+/* ---- Add operator form ---- */
 .add-form { display: flex; gap: 8px; flex-wrap: wrap; }
 .add-form input[type=text] {
   flex: 1;
@@ -127,7 +176,6 @@ section {
   font-size: 14px;
   background: #faf7ed;
 }
-.add-form input[type=text]:focus { outline: 2px solid #5a6b3e; outline-offset: -1px; }
 .emoji-picker {
   width: 60px;
   padding: 8px;
@@ -150,19 +198,17 @@ button {
   font-size: 12px;
   cursor: pointer;
   transition: background 0.15s;
+  height: 36px;
 }
 button:hover { background: #6b7d4a; }
 button:disabled { background: #b5b09e; cursor: not-allowed; }
-button.danger { background: #a8442a; }
+button.danger { background: #a8442a; height: auto; }
 button.danger:hover { background: #c25030; }
-button.ghost { background: transparent; color: #5a6b3e; border: 1px solid #5a6b3e; }
+button.ghost { background: transparent; color: #5a6b3e; border: 1px solid #5a6b3e; height: auto; }
 button.ghost:hover { background: #5a6b3e; color: #f5f1e8; }
-button.tiny { padding: 4px 8px; font-size: 10px; }
-button.w-btn { background: #4a7c3a; }
-button.w-btn:hover { background: #5a9046; }
-button.l-btn { background: #8a3a2a; }
-button.l-btn:hover { background: #a04a36; }
+button.tiny { padding: 4px 8px; font-size: 10px; height: auto; }
 
+/* ---- Podium ---- */
 .podium {
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr;
@@ -191,16 +237,17 @@ button.l-btn:hover { background: #a04a36; }
 }
 .podium-emoji { font-size: 32px; margin-bottom: 4px; }
 .podium-name { font-weight: 900; letter-spacing: 1px; text-transform: uppercase; font-size: 13px; margin-bottom: 2px; word-break: break-word; }
-.podium-wl { font-size: 11px; color: #555; font-weight: 700; }
-.podium-rate { font-size: 16px; font-weight: 900; color: #2a3122; margin-top: 4px; }
+.podium-score { font-size: 22px; font-weight: 900; color: #2a3122; margin-top: 4px; }
+.podium-kd { font-size: 11px; color: #555; font-weight: 700; }
 .podium-empty { color: #999; font-style: italic; font-size: 11px; padding: 20px 0; }
 
+/* ---- Leaderboard rows ---- */
 .lb-row {
   display: grid;
-  grid-template-columns: 32px 50px 1fr 90px 80px 80px 200px;
-  gap: 10px;
+  grid-template-columns: 32px 44px 1fr 70px 70px 60px 110px 40px;
+  gap: 8px;
   align-items: center;
-  padding: 10px 8px;
+  padding: 8px;
   border-bottom: 1px solid #ece4cc;
 }
 .lb-row:hover { background: #faf7ed; }
@@ -208,56 +255,82 @@ button.l-btn:hover { background: #a04a36; }
   background: #2a3122; color: #d4c896;
   font-size: 10px; letter-spacing: 1.5px;
   text-transform: uppercase; font-weight: 800;
-  border-radius: 3px 3px 0 0; padding: 8px;
+  border-radius: 3px 3px 0 0;
 }
 .lb-pos { text-align: center; font-weight: 900; color: #5a6b3e; font-size: 15px; }
-.lb-avatar { font-size: 26px; text-align: center; }
-.lb-name-cell { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.lb-name { font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
-.lb-rank-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.rank-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: #2a3122; color: #d4c896;
-  padding: 2px 6px; border-radius: 3px;
-  font-size: 9px; letter-spacing: 1px;
-  font-weight: 800; text-transform: uppercase;
-}
-.streak-badge {
-  font-size: 10px; padding: 2px 6px; border-radius: 3px;
-  background: #d97534; color: white;
-  font-weight: 800; letter-spacing: 0.5px;
+.lb-avatar { font-size: 24px; text-align: center; }
+.lb-name-cell { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.lb-name { font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
+.lb-badges { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.lb-elim { font-size: 18px; font-weight: 900; color: #2a3122; text-align: center; }
+.lb-deaths { font-size: 14px; font-weight: 800; color: #8a3a2a; text-align: center; }
+.lb-kd { font-size: 13px; font-weight: 800; color: #5a6b3e; text-align: center; }
+.lb-date { font-size: 11px; color: #666; }
+.lb-actions { display: flex; gap: 4px; justify-content: flex-end; }
+
+/* ---- Badges ---- */
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  font-weight: 800;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+.badge.rank { background: #2a3122; color: #d4c896; }
+.badge.crown { background: #c89c2e; color: #1f2418; }
+.badge.legendary {
+  background: linear-gradient(90deg, #c89c2e, #d97534, #c89c2e);
+  background-size: 200% 100%;
+  color: #1f2418;
+  animation: shimmer 3s linear infinite;
+  border: 1px solid #d97534;
+}
+@keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+.badge.kill { background: #d97534; color: white; }
+.badge.kill.high { background: #a8442a; }
+.badge.kill.max {
+  background: #1a1a1a; color: #ff6b35;
   animation: pulse 1.5s infinite;
 }
-.streak-badge.cold { background: #5a8aa8; animation: none; }
 @keyframes pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(217, 117, 52, 0.6); }
   50% { box-shadow: 0 0 0 4px rgba(217, 117, 52, 0); }
 }
-.lb-wl { font-weight: 800; font-size: 13px; }
-.lb-w { color: #4a7c3a; }
-.lb-l { color: #8a3a2a; }
-.lb-rate-cell { display: flex; align-items: center; gap: 6px; font-weight: 800; }
-.rate-bar { flex: 1; height: 6px; background: #ece4cc; border-radius: 3px; overflow: hidden; min-width: 30px; }
-.rate-bar-fill { height: 100%; background: linear-gradient(90deg, #4a7c3a, #8aaa5e); transition: width 0.4s; }
-.lb-actions { display: flex; gap: 4px; justify-content: flex-end; }
-
-.activity { max-height: 240px; overflow-y: auto; font-size: 12px; }
-.activity-row {
-  display: flex; align-items: center; gap: 8px;
-  padding: 6px 8px; border-bottom: 1px solid #f0e8d0;
+.badge.kd { background: #4a7c3a; color: white; }
+.badge.kd.high { background: #2a5a1a; }
+.badge.flawless {
+  background: linear-gradient(90deg, #ffffff, #d4c896, #ffffff);
+  background-size: 200% 100%;
+  color: #1f2418;
+  animation: shimmer 3s linear infinite;
+  border: 1px solid #c89c2e;
 }
-.activity-row:last-child { border-bottom: none; }
-.activity-icon {
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; color: white; font-size: 11px;
-}
-.activity-icon.w { background: #4a7c3a; }
-.activity-icon.l { background: #8a3a2a; }
-.activity-name { font-weight: 700; flex: 1; }
-.activity-ts { color: #888; font-size: 10px; }
 
+/* ---- Roster panel ---- */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+.roster-card {
+  background: #faf7ed;
+  border: 1px solid #d4c896;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.roster-emoji { font-size: 28px; }
+.roster-info { flex: 1; min-width: 0; }
+.roster-name { font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
+.roster-meta { font-size: 10px; color: #666; margin-top: 2px; }
+.roster-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+
+/* ---- Misc ---- */
 .footer-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
 .empty-state { text-align: center; padding: 30px 20px; color: #888; }
 
@@ -284,78 +357,96 @@ button.l-btn:hover { background: #a04a36; }
   border-radius: 3px;
 }
 .emoji-panel.open { display: flex; }
-.emoji-panel span {
-  font-size: 20px; cursor: pointer;
-  padding: 4px; border-radius: 3px;
-}
+.emoji-panel span { font-size: 20px; cursor: pointer; padding: 4px; border-radius: 3px; }
 .emoji-panel span:hover { background: #d4c896; }
 .emoji-panel span.selected { background: #5a6b3e; }
 
-/* Setup overlay */
 .setup {
   position: fixed; inset: 0;
-  background: #1f2418;
-  color: #e8e0d0;
+  background: #1f2418; color: #e8e0d0;
   z-index: 200;
   display: none;
   align-items: center; justify-content: center;
-  padding: 20px;
-  overflow-y: auto;
+  padding: 20px; overflow-y: auto;
 }
 .setup.open { display: flex; }
 .setup-box {
   max-width: 540px; width: 100%;
-  background: #2a3122;
-  padding: 24px;
-  border-radius: 6px;
-  border: 2px solid #5a6b3e;
+  background: #2a3122; padding: 24px;
+  border-radius: 6px; border: 2px solid #5a6b3e;
 }
 .setup h2 { color: #d4c896; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; font-size: 18px; }
 .setup p, .setup li { color: #c8c0a0; font-size: 13px; line-height: 1.5; margin-bottom: 8px; }
 .setup ol { padding-left: 24px; margin-bottom: 16px; }
-.setup code {
-  background: #1f2418; color: #8aaa5e;
-  padding: 2px 6px; border-radius: 3px;
-  font-family: 'Consolas', monospace; font-size: 12px;
-}
+.setup code { background: #1f2418; color: #8aaa5e; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 12px; }
 .setup a { color: #d97534; }
 
-/* Read-only banner */
 .readonly-banner {
-  background: #c89c2e;
-  color: #1f2418;
-  padding: 8px 14px;
-  border-radius: 4px;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  text-align: center;
-  margin: 8px 0;
+  background: #c89c2e; color: #1f2418;
+  padding: 8px 14px; border-radius: 4px;
+  font-weight: 700; font-size: 12px;
+  letter-spacing: 1px; text-transform: uppercase;
+  text-align: center; margin: 8px 0;
   display: none;
 }
 .readonly-banner.show { display: block; }
 
-@media (max-width: 720px) {
-  .lb-row { grid-template-columns: 28px 40px 1fr 70px; gap: 6px; font-size: 12px; }
-  .lb-row .col-rate, .lb-row .col-actions { display: none; }
+@media (max-width: 760px) {
+  .submit-form { grid-template-columns: 1fr 1fr; }
+  .submit-form button { grid-column: 1 / -1; }
+  .lb-row { grid-template-columns: 28px 36px 1fr 50px 60px 36px; gap: 6px; font-size: 12px; }
+  .lb-row .col-deaths, .lb-row .col-date { display: none; }
   .podium { grid-template-columns: 1fr; }
+  .hero-record { grid-template-columns: 1fr; text-align: center; }
 }
 </style>
 </head>
 <body>
 
 <!-- ====================================================================== -->
-<!-- ====================== CONFIGURE THESE TWO LINES ===================== -->
+<!-- ====================== CONFIGURE THESE LINES ========================= -->
 <!-- ====================================================================== -->
 <script>
 const CONFIG = {
-  BIN_ID:     '6a11a7b76877513b27bd78b3',
-  ACCESS_KEY: '$2a$10$NyW.LnRGpnR7.ygg3gYbhun78RXQdpDwbHuweauFhaa73JvNtpWFe',
-  // If you want a passcode to gate editing, set it below (squadmates need it to add/log scores).
-  // Leave empty string '' for fully open editing.
+  BIN_ID:     '6a12cb3d6610dd3ae898d9ef',
+  ACCESS_KEY: '$2a$10$67R6705yDM5OYs7fJnQe7OoERjOmcbda75kpy5eMr.e2tfNxa9cB2',
+  // Empty string '' = anyone can edit. Set a passcode to gate editing.
   EDIT_PASSCODE: 'iridescent'
 };
+
+// Tunable thresholds. Edit these numbers to fit your typical match scores.
+const ELIM_BADGES = [
+  { min: 100, name: 'MOAB',       cls: 'kill max' },
+  { min: 75,  name: 'Nuclear ☢️',  cls: 'kill max' },
+  { min: 50,  name: 'Rampage 💀',  cls: 'kill high' },
+  { min: 30,  name: 'Killstreak ⚡', cls: 'kill' },
+  { min: 20,  name: 'On Fire 🔥',  cls: 'kill' }
+];
+const KD_BADGES = [
+  { minRatio: 5.0, name: 'Untouchable 🛡️', cls: 'kd high' },
+  { minRatio: 3.0, name: 'Surgical ⚔️',    cls: 'kd high' },
+  { minRatio: 2.0, name: 'Lethal 🎯',      cls: 'kd' }
+];
+const REIGN_BADGES = [
+  { minDays: 365, name: '🌟 LEGENDARY',  cls: 'legendary' },
+  { minDays: 90,  name: '💎 Untouchable', cls: 'crown' },
+  { minDays: 30,  name: '⚜️ Dominant',    cls: 'crown' },
+  { minDays: 7,   name: '🏆 Crowned',     cls: 'crown' },
+  { minDays: 1,   name: '👑 Reigning',    cls: 'crown' }
+];
+// Career rank based on cumulative eliminations across all logged records
+const RANKS = [
+  { min: 0,    name: 'Recruit',    color: '#999' },
+  { min: 50,   name: 'Private',    color: '#777' },
+  { min: 150,  name: 'Corporal',   color: '#5a8aa8' },
+  { min: 300,  name: 'Sergeant',   color: '#5a6b3e' },
+  { min: 500,  name: 'Lieutenant', color: '#8aaa5e' },
+  { min: 800,  name: 'Captain',    color: '#d97534' },
+  { min: 1200, name: 'Major',      color: '#c89c2e' },
+  { min: 1800, name: 'Colonel',    color: '#a8442a' },
+  { min: 2500, name: 'General',    color: '#7a2a8a' },
+  { min: 3500, name: 'Commander',  color: '#1a1a1a' }
+];
 </script>
 <!-- ====================================================================== -->
 
@@ -374,7 +465,7 @@ const CONFIG = {
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat-pill"><div class="num" id="stat-matches">0</div><div class="lbl">Matches</div></div>
+    <div class="stat-pill"><div class="num" id="stat-records">0</div><div class="lbl">Records</div></div>
     <div class="stat-pill"><div class="num" id="stat-players">0</div><div class="lbl">Operators</div></div>
     <div class="sync idle" id="sync-indicator" title="Click to refresh">
       <span class="sync-dot"></span><span id="sync-text">Synced</span>
@@ -386,29 +477,49 @@ const CONFIG = {
 
 <div class="readonly-banner" id="readonly-banner">View-only mode — enter passcode to log scores</div>
 
+<section id="hero-section" style="display:none">
+  <div class="hero-record" id="hero-record"></div>
+</section>
+
 <section>
-  <div class="section-title">Deploy Operator</div>
-  <div class="add-form">
-    <input type="text" id="new-name" placeholder="Operator callsign..." maxlength="20">
-    <button type="button" class="emoji-picker" id="emoji-btn">🎯</button>
-    <button id="add-btn">+ Deploy</button>
-  </div>
-  <div class="emoji-panel" id="emoji-panel"></div>
+  <div class="section-title">Log a Match</div>
+  <form class="submit-form" id="submit-form" onsubmit="return false">
+    <div class="field">
+      <label for="rec-player">Operator</label>
+      <select id="rec-player"></select>
+    </div>
+    <div class="field">
+      <label for="rec-elim">Eliminations</label>
+      <input type="number" id="rec-elim" min="0" max="999" placeholder="0">
+    </div>
+    <div class="field">
+      <label for="rec-deaths">Deaths</label>
+      <input type="number" id="rec-deaths" min="0" max="999" placeholder="0">
+    </div>
+    <button type="submit" id="submit-btn">+ Log Match</button>
+  </form>
+  <p id="submit-hint" style="display:none; margin-top:8px; font-size:12px; color:#888;">Deploy an operator below before logging a match.</p>
 </section>
 
 <section id="podium-section" style="display:none">
-  <div class="section-title">Top Operators</div>
+  <div class="section-title">Top 3 Records</div>
   <div class="podium" id="podium"></div>
 </section>
 
 <section id="board-section">
-  <div class="section-title">Full Roster</div>
+  <div class="section-title">All Records</div>
   <div id="leaderboard"></div>
 </section>
 
-<section id="activity-section" style="display:none">
-  <div class="section-title">Combat Log</div>
-  <div class="activity" id="activity"></div>
+<section>
+  <div class="section-title">Operator Roster</div>
+  <div class="add-form" style="margin-bottom:12px">
+    <input type="text" id="new-name" placeholder="New operator callsign..." maxlength="20">
+    <button type="button" class="emoji-picker" id="emoji-btn">🎯</button>
+    <button id="add-btn">+ Deploy</button>
+  </div>
+  <div class="emoji-panel" id="emoji-panel"></div>
+  <div id="roster"></div>
 </section>
 
 <div class="footer-actions">
@@ -435,53 +546,27 @@ const CONFIG = {
 <div class="setup" id="setup">
   <div class="setup-box">
     <h2>Setup Required</h2>
-    <p>This leaderboard syncs through <a href="https://jsonbin.io" target="_blank">JSONBin.io</a> (free). To finish setup:</p>
-    <ol>
-      <li>Create a free account at <a href="https://jsonbin.io" target="_blank">jsonbin.io</a>.</li>
-      <li>Create a new bin with the starter content: <code>{"squadName":"MY SQUAD","players":[],"matches":[]}</code></li>
-      <li>Copy the <strong>Bin ID</strong> from the URL of your new bin.</li>
-      <li>Go to <strong>API Keys</strong> in JSONBin settings and create an <strong>Access Key</strong> with both <code>readBin</code> and <code>updateBin</code> enabled.</li>
-      <li>Open the <code>index.html</code> file in your GitHub repo and paste your Bin ID and Access Key into the <code>CONFIG</code> block near the top.</li>
-      <li>Commit and push. GitHub Pages will rebuild within ~30s.</li>
-    </ol>
-    <p style="color:#d97534"><strong>Reload this page after editing the file.</strong></p>
+    <p>Configure your JSONBin credentials in the CONFIG block at the top of index.html.</p>
   </div>
 </div>
 
 <script>
 const EMOJI_OPTIONS = ['🎯','💀','🔫','🪖','⚔️','🛡️','💣','🔥','⚡','☢️','🏴‍☠️','🦅','🐺','🐉','👹','😈','🤖','👻','🃏','🎮','🥷','🧨','🦾','🚁'];
-const RANKS = [
-  { min: 0, name: 'Recruit', color: '#999' },
-  { min: 3, name: 'Private', color: '#777' },
-  { min: 7, name: 'Corporal', color: '#5a8aa8' },
-  { min: 12, name: 'Sergeant', color: '#5a6b3e' },
-  { min: 20, name: 'Lieutenant', color: '#8aaa5e' },
-  { min: 30, name: 'Captain', color: '#d97534' },
-  { min: 45, name: 'Major', color: '#c89c2e' },
-  { min: 65, name: 'Colonel', color: '#a8442a' },
-  { min: 90, name: 'General', color: '#7a2a8a' },
-  { min: 120, name: 'Commander', color: '#1a1a1a' }
-];
 const API_BASE = 'https://api.jsonbin.io/v3/b/';
 const POLL_INTERVAL_MS = 15000;
 
-let state = { squadName: 'MY SQUAD', players: [], matches: [] };
+let state = { squadName: 'MY SQUAD', players: [], records: [] };
 let lastAction = null;
 let selectedEmoji = '🎯';
 let pendingSave = null;
 let editAuthorized = false;
 
-// ---- Setup check ----
 function isConfigured() {
   return CONFIG.BIN_ID && CONFIG.BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE'
       && CONFIG.ACCESS_KEY && CONFIG.ACCESS_KEY !== 'PASTE_YOUR_ACCESS_KEY_HERE';
 }
+if (!isConfigured()) document.getElementById('setup').classList.add('open');
 
-if (!isConfigured()) {
-  document.getElementById('setup').classList.add('open');
-}
-
-// ---- Sync indicator ----
 function setSync(status, text) {
   const el = document.getElementById('sync-indicator');
   el.classList.remove('idle', 'syncing', 'error');
@@ -489,7 +574,6 @@ function setSync(status, text) {
   document.getElementById('sync-text').textContent = text;
 }
 
-// ---- API ----
 async function apiGet() {
   setSync('syncing', 'Syncing...');
   try {
@@ -500,11 +584,7 @@ async function apiGet() {
     const data = await res.json();
     setSync('idle', 'Synced');
     return data.record;
-  } catch (e) {
-    setSync('error', 'Offline');
-    console.error(e);
-    return null;
-  }
+  } catch (e) { setSync('error', 'Offline'); console.error(e); return null; }
 }
 
 async function apiPut(payload) {
@@ -512,58 +592,62 @@ async function apiPut(payload) {
   try {
     const res = await fetch(API_BASE + CONFIG.BIN_ID, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Key': CONFIG.ACCESS_KEY
-      },
+      headers: { 'Content-Type': 'application/json', 'X-Access-Key': CONFIG.ACCESS_KEY },
       body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error('PUT ' + res.status);
     setSync('idle', 'Synced');
     return true;
-  } catch (e) {
-    setSync('error', 'Save failed');
-    console.error(e);
-    return false;
-  }
+  } catch (e) { setSync('error', 'Save failed'); console.error(e); return false; }
 }
 
-// Merge: take latest server state, append any new local matches not yet in server's match list
-function mergeForSave(serverState, localState) {
-  if (!serverState) return localState;
-  const serverMatchIds = new Set((serverState.matches || []).map(m => m.id));
-  const newLocalMatches = (localState.matches || []).filter(m => !serverMatchIds.has(m.id));
-  const merged = {
-    squadName: localState.squadName || serverState.squadName || 'MY SQUAD',
-    players: localState.players, // last write wins for roster
-    matches: [...newLocalMatches, ...(serverState.matches || [])]
+// Normalize: strip legacy fields, ensure new schema
+function normalize(s) {
+  if (!s) s = {};
+  return {
+    squadName: s.squadName || 'MY SQUAD',
+    players: (s.players || []).map(p => ({
+      id: p.id, name: p.name, emoji: p.emoji || '🎯'
+    })),
+    records: (s.records || []).map(r => ({
+      id: r.id,
+      playerId: r.playerId,
+      eliminations: Number(r.eliminations) || 0,
+      deaths: Number(r.deaths) || 0,
+      ts: Number(r.ts) || Date.now()
+    }))
   };
-  return merged;
 }
 
-// Recompute aggregate stats from match list
-function recomputeStats(s) {
-  for (const p of s.players) { p.wins = 0; p.losses = 0; p.streak = 0; p.bestStreak = 0; }
-  const byTime = [...(s.matches || [])].sort((a, b) => a.ts - b.ts);
-  for (const m of byTime) {
-    const p = s.players.find(x => x.id === m.playerId);
-    if (!p) continue;
-    if (m.result === 'W') {
-      p.wins++;
-      p.streak = p.streak < 0 ? 1 : p.streak + 1;
-      if (p.streak > p.bestStreak) p.bestStreak = p.streak;
-    } else {
-      p.losses++;
-      p.streak = p.streak > 0 ? -1 : p.streak - 1;
+// Merge: keep all records by ID (don't lose entries from concurrent edits)
+function mergeForSave(serverState, localState) {
+  const server = normalize(serverState);
+  const local = normalize(localState);
+  const allById = new Map();
+  for (const r of server.records) allById.set(r.id, r);
+  for (const r of local.records) allById.set(r.id, r); // local wins on ID match
+  // Removals: a record present in server but absent locally AND locally we had a "delete" marker would be needed
+  // Simpler: if local has fewer records, it means we deleted something. Trust local list as authoritative.
+  const localIds = new Set(local.records.map(r => r.id));
+  const merged = {
+    squadName: local.squadName,
+    players: local.players,
+    records: [...localIds].map(id => allById.get(id)).filter(Boolean)
+  };
+  // Also include any server records the local didn't know about (new additions from elsewhere)
+  for (const r of server.records) {
+    if (!localIds.has(r.id) && !merged.records.find(x => x.id === r.id)) {
+      // Only re-add if it was created after our last sync (heuristic: trust newer entries)
+      merged.records.push(r);
     }
   }
+  return merged;
 }
 
 async function saveNow() {
   if (!isConfigured()) return;
   const latest = await apiGet();
   const merged = mergeForSave(latest, state);
-  recomputeStats(merged);
   await apiPut(merged);
   state = merged;
   render();
@@ -577,35 +661,97 @@ function scheduleSave() {
 async function pullLatest() {
   const latest = await apiGet();
   if (!latest) return;
-  // Don't clobber if we have a pending save
   if (pendingSave) return;
-  state = {
-    squadName: latest.squadName || 'MY SQUAD',
-    players: latest.players || [],
-    matches: latest.matches || []
-  };
-  recomputeStats(state);
+  state = normalize(latest);
   render();
 }
 
-// ---- Rank / streak ----
-function rankFor(wins) {
+// ---- Helpers ----
+function newId(prefix) { return prefix + '_' + Date.now() + '_' + Math.floor(Math.random()*10000); }
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDate(ts) { return new Date(ts).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }); }
+function fmtDaysHeld(days) {
+  if (days < 1) return Math.max(0, Math.floor(days * 24)) + 'h held';
+  if (days < 365) return Math.floor(days) + 'd held';
+  const y = Math.floor(days / 365);
+  const d = Math.floor(days % 365);
+  return y + 'y ' + d + 'd held';
+}
+function kdRatio(elim, deaths) {
+  if (deaths === 0) return elim > 0 ? Infinity : 0;
+  return elim / deaths;
+}
+function fmtKD(elim, deaths) {
+  const kd = kdRatio(elim, deaths);
+  if (!isFinite(kd)) return '∞';
+  return kd.toFixed(2);
+}
+
+function rankFor(careerKills) {
   let r = RANKS[0];
-  for (const candidate of RANKS) if (wins >= candidate.min) r = candidate;
+  for (const c of RANKS) if (careerKills >= c.min) r = c;
   return r;
 }
-function streakBadge(streak) {
-  if (streak <= -3) return { text: `❄️ COLD ${Math.abs(streak)}L`, cold: true };
-  if (streak >= 10) return { text: `☢️ NUCLEAR ${streak}W`, cold: false };
-  if (streak >= 7) return { text: `💀 RAMPAGE ${streak}W`, cold: false };
-  if (streak >= 5) return { text: `⚡ KILLSTREAK ${streak}W`, cold: false };
-  if (streak >= 3) return { text: `🔥 ON FIRE ${streak}W`, cold: false };
+
+function elimBadge(elim) {
+  for (const b of ELIM_BADGES) if (elim >= b.min) return b;
+  return null;
+}
+function kdBadge(elim, deaths) {
+  const ratio = kdRatio(elim, deaths);
+  if (deaths === 0 && elim >= 10) return { name: '✨ Flawless', cls: 'flawless' };
+  for (const b of KD_BADGES) if (ratio >= b.minRatio) return b;
+  return null;
+}
+function reignBadgeForDays(days) {
+  for (const b of REIGN_BADGES) if (days >= b.minDays) return b;
   return null;
 }
 
-// ---- Mutations ----
-function newId() { return 'p_' + Date.now() + '_' + Math.floor(Math.random()*1000); }
+// Compute which records ever held #1 and for how long
+function computeReigns(records) {
+  const byTime = [...records].sort((a, b) => a.ts - b.ts);
+  const map = new Map(); // recordId -> { daysHeld, isCurrent }
+  let leader = null;
+  for (const r of byTime) {
+    if (!leader || r.eliminations > leader.eliminations) {
+      if (leader) {
+        map.set(leader.id, { daysHeld: (r.ts - leader.ts) / 86400000, isCurrent: false });
+      }
+      leader = r;
+    }
+  }
+  if (leader) {
+    map.set(leader.id, { daysHeld: (Date.now() - leader.ts) / 86400000, isCurrent: true });
+  }
+  return map;
+}
 
+// Career stats per player (total elim, total matches)
+function careerStats(records) {
+  const map = new Map();
+  for (const r of records) {
+    const cur = map.get(r.playerId) || { matches: 0, elim: 0, deaths: 0, best: 0 };
+    cur.matches++;
+    cur.elim += r.eliminations;
+    cur.deaths += r.deaths;
+    if (r.eliminations > cur.best) cur.best = r.eliminations;
+    map.set(r.playerId, cur);
+  }
+  return map;
+}
+
+function sortedRecords(records) {
+  return [...records].sort((a, b) => {
+    if (b.eliminations !== a.eliminations) return b.eliminations - a.eliminations;
+    const ak = kdRatio(a.eliminations, a.deaths);
+    const bk = kdRatio(b.eliminations, b.deaths);
+    if (bk !== ak) return (bk === Infinity ? 1 : ak === Infinity ? -1 : bk - ak);
+    return a.ts - b.ts; // earlier record wins ties (got there first)
+  });
+}
+
+// ---- Mutations ----
 function requireEdit() {
   if (!CONFIG.EDIT_PASSCODE) return true;
   if (editAuthorized) return true;
@@ -617,10 +763,9 @@ function addPlayer(name, emoji) {
   if (!requireEdit()) return;
   if (!name || !name.trim()) return;
   state.players.push({
-    id: newId(),
+    id: newId('p'),
     name: name.trim().toUpperCase(),
-    emoji: emoji || '🎯',
-    wins: 0, losses: 0, streak: 0, bestStreak: 0
+    emoji: emoji || '🎯'
   });
   lastAction = null;
   scheduleSave();
@@ -630,20 +775,32 @@ function addPlayer(name, emoji) {
 function removePlayer(id) {
   if (!requireEdit()) return;
   state.players = state.players.filter(p => p.id !== id);
-  state.matches = state.matches.filter(m => m.playerId !== id);
+  state.records = state.records.filter(r => r.playerId !== id);
   lastAction = null;
   scheduleSave();
   render();
 }
 
-function logResult(playerId, result) {
+function logRecord(playerId, elim, deaths) {
   if (!requireEdit()) return;
-  const p = state.players.find(x => x.id === playerId);
-  if (!p) return;
-  const match = { id: 'm_' + Date.now() + '_' + Math.floor(Math.random()*1000), playerId, result, ts: Date.now() };
-  state.matches.unshift(match);
-  recomputeStats(state);
-  lastAction = { matchId: match.id };
+  if (!state.players.find(p => p.id === playerId)) return;
+  const rec = {
+    id: newId('r'),
+    playerId,
+    eliminations: Math.max(0, Math.floor(elim) || 0),
+    deaths: Math.max(0, Math.floor(deaths) || 0),
+    ts: Date.now()
+  };
+  state.records.push(rec);
+  lastAction = { recordId: rec.id };
+  scheduleSave();
+  render();
+}
+
+function deleteRecord(id) {
+  if (!requireEdit()) return;
+  state.records = state.records.filter(r => r.id !== id);
+  lastAction = null;
   scheduleSave();
   render();
 }
@@ -651,137 +808,183 @@ function logResult(playerId, result) {
 function undoLast() {
   if (!requireEdit()) return;
   if (!lastAction) return;
-  state.matches = state.matches.filter(m => m.id !== lastAction.matchId);
-  recomputeStats(state);
+  state.records = state.records.filter(r => r.id !== lastAction.recordId);
   lastAction = null;
   scheduleSave();
   render();
 }
 
-// ---- Render ----
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function fmtTime(ts) {
-  const d = new Date(ts);
-  const diff = Date.now() - d;
-  if (diff < 60000) return 'just now';
-  if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
-  if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
-  const days = Math.floor(diff/86400000);
-  if (days < 7) return days + 'd ago';
-  return d.toLocaleDateString();
-}
-function rankedPlayers() {
-  return [...state.players].sort((a, b) => {
-    if (b.wins !== a.wins) return b.wins - a.wins;
-    const ar = (a.wins + a.losses) > 0 ? a.wins / (a.wins + a.losses) : 0;
-    const br = (b.wins + b.losses) > 0 ? b.wins / (b.wins + b.losses) : 0;
-    if (br !== ar) return br - ar;
-    return a.losses - b.losses;
-  });
+// ---- Rendering ----
+function badgesForRecord(rec, reign) {
+  const parts = [];
+  const e = elimBadge(rec.eliminations);
+  if (e) parts.push(`<span class="badge ${e.cls}">${e.name}</span>`);
+  const k = kdBadge(rec.eliminations, rec.deaths);
+  if (k) parts.push(`<span class="badge ${k.cls}">${k.name}</span>`);
+  if (reign) {
+    const reignBadge = reignBadgeForDays(reign.daysHeld);
+    if (reignBadge) {
+      parts.push(`<span class="badge ${reignBadge.cls}" title="${fmtDaysHeld(reign.daysHeld)}${reign.isCurrent ? ' (current)' : ''}">${reignBadge.name} · ${fmtDaysHeld(reign.daysHeld)}</span>`);
+    }
+  }
+  return parts.join('');
 }
 
-function renderPodium(players) {
-  const section = document.getElementById('podium-section');
-  if (players.length < 1) { section.style.display = 'none'; return; }
+function renderHero() {
+  const section = document.getElementById('hero-section');
+  if (state.records.length === 0) { section.style.display = 'none'; return; }
   section.style.display = 'block';
+  const sorted = sortedRecords(state.records);
+  const top = sorted[0];
+  const player = state.players.find(p => p.id === top.playerId);
+  if (!player) { section.style.display = 'none'; return; }
+  const reigns = computeReigns(state.records);
+  const reign = reigns.get(top.id);
+  const reignBadge = reign ? reignBadgeForDays(reign.daysHeld) : null;
+  const kdStr = fmtKD(top.eliminations, top.deaths);
+  document.getElementById('hero-record').innerHTML = `
+    <div class="hero-emoji">${player.emoji}</div>
+    <div class="hero-info">
+      <div class="hero-name">${escapeHtml(player.name)}</div>
+      <div class="hero-score">${top.deaths} deaths · K/D ${kdStr} · set ${fmtDate(top.ts)}</div>
+      <div class="hero-badges">
+        ${reignBadge ? `<span class="badge ${reignBadge.cls}">${reignBadge.name} · ${fmtDaysHeld(reign.daysHeld)}</span>` : ''}
+        ${badgesForRecord(top, null)}
+      </div>
+    </div>
+    <div class="hero-elim">
+      <div class="hero-elim-num">${top.eliminations}</div>
+      <div class="hero-elim-lbl">Eliminations</div>
+    </div>
+  `;
+}
+
+function renderPodium() {
+  const section = document.getElementById('podium-section');
+  if (state.records.length < 2) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  const sorted = sortedRecords(state.records);
+  const top3 = sorted.slice(0, 3);
   const slots = [{ idx: 1, cls: 'second' }, { idx: 0, cls: 'first' }, { idx: 2, cls: 'third' }];
   document.getElementById('podium').innerHTML = slots.map(s => {
-    const p = players[s.idx];
-    if (!p) return `<div class="podium-card ${s.cls}"><div class="podium-empty">— vacant —</div></div>`;
-    const total = p.wins + p.losses;
-    const rate = total ? Math.round(p.wins/total*100) : 0;
+    const r = top3[s.idx];
+    if (!r) return `<div class="podium-card ${s.cls}"><div class="podium-empty">— vacant —</div></div>`;
+    const p = state.players.find(x => x.id === r.playerId);
+    if (!p) return `<div class="podium-card ${s.cls}"><div class="podium-empty">— removed —</div></div>`;
     return `<div class="podium-card ${s.cls}">
       <div class="podium-rank-num">${s.idx+1}</div>
       <div class="podium-emoji">${p.emoji}</div>
       <div class="podium-name">${escapeHtml(p.name)}</div>
-      <div class="podium-wl">${p.wins}W · ${p.losses}L</div>
-      <div class="podium-rate">${rate}%</div>
+      <div class="podium-score">${r.eliminations}</div>
+      <div class="podium-kd">${r.deaths} deaths · K/D ${fmtKD(r.eliminations, r.deaths)}</div>
     </div>`;
   }).join('');
 }
 
-function renderLeaderboard(players) {
+function renderLeaderboard() {
   const lb = document.getElementById('leaderboard');
-  if (players.length === 0) {
+  if (state.records.length === 0) {
     lb.innerHTML = `<div class="empty-state">
       <p style="font-size:32px">🪖</p>
-      <p style="font-weight:800;letter-spacing:2px;text-transform:uppercase">No operators deployed</p>
-      <p>Add your first squad member above to begin tracking.</p>
+      <p style="font-weight:800;letter-spacing:2px;text-transform:uppercase">No records logged</p>
+      <p>Log a match above to start the leaderboard.</p>
     </div>`;
     return;
   }
+  const sorted = sortedRecords(state.records);
+  const reigns = computeReigns(state.records);
   let html = `<div class="lb-row head">
-    <div>#</div><div></div><div>Operator</div><div>Rank</div><div>W—L</div>
-    <div class="col-rate">Win %</div><div class="col-actions"></div>
+    <div>#</div><div></div><div>Operator / Badges</div>
+    <div style="text-align:center">Elim</div>
+    <div style="text-align:center" class="col-deaths">Deaths</div>
+    <div style="text-align:center">K/D</div>
+    <div class="col-date">Date</div>
+    <div></div>
   </div>`;
-  players.forEach((p, i) => {
-    const total = p.wins + p.losses;
-    const rate = total ? Math.round(p.wins/total*100) : 0;
-    const rank = rankFor(p.wins);
-    const streak = streakBadge(p.streak);
+  sorted.forEach((r, i) => {
+    const p = state.players.find(x => x.id === r.playerId);
+    if (!p) return;
+    const reign = reigns.get(r.id);
     html += `<div class="lb-row">
       <div class="lb-pos">${i+1}</div>
       <div class="lb-avatar">${p.emoji}</div>
       <div class="lb-name-cell">
         <div class="lb-name">${escapeHtml(p.name)}</div>
-        <div class="lb-rank-row">
-          <span class="rank-badge" style="background:${rank.color}">${rank.name}</span>
-          ${streak ? `<span class="streak-badge ${streak.cold?'cold':''}">${streak.text}</span>` : ''}
-        </div>
+        <div class="lb-badges">${badgesForRecord(r, reign)}</div>
       </div>
-      <div class="lb-wl"><span class="lb-w">${p.wins}</span>—<span class="lb-l">${p.losses}</span></div>
-      <div class="lb-wl">${total}</div>
-      <div class="lb-rate-cell col-rate">
-        <div class="rate-bar"><div class="rate-bar-fill" style="width:${rate}%"></div></div>
-        <span>${rate}%</span>
-      </div>
-      <div class="lb-actions col-actions">
-        <button class="w-btn tiny" data-w="${p.id}">+W</button>
-        <button class="l-btn tiny" data-l="${p.id}">+L</button>
-        <button class="danger tiny" data-rm="${p.id}">×</button>
-      </div>
+      <div class="lb-elim">${r.eliminations}</div>
+      <div class="lb-deaths col-deaths">${r.deaths}</div>
+      <div class="lb-kd">${fmtKD(r.eliminations, r.deaths)}</div>
+      <div class="lb-date col-date">${fmtDate(r.ts)}</div>
+      <div class="lb-actions"><button class="danger tiny" data-del-rec="${r.id}" title="Delete record">×</button></div>
     </div>`;
   });
   lb.innerHTML = html;
-  lb.querySelectorAll('[data-w]').forEach(b => b.onclick = () => logResult(b.dataset.w, 'W'));
-  lb.querySelectorAll('[data-l]').forEach(b => b.onclick = () => logResult(b.dataset.l, 'L'));
-  lb.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
-    const p = state.players.find(x => x.id === b.dataset.rm);
-    if (p) confirmModal(`Remove ${p.name}?`, `This wipes ${p.name}'s record and all their match history.`, () => removePlayer(p.id));
+  lb.querySelectorAll('[data-del-rec]').forEach(b => b.onclick = () => {
+    const r = state.records.find(x => x.id === b.dataset.delRec);
+    if (!r) return;
+    const p = state.players.find(x => x.id === r.playerId);
+    confirmModal('Delete record?', `Remove ${p ? p.name + "'s" : 'this'} ${r.eliminations}-elim record from ${fmtDate(r.ts)}?`, () => deleteRecord(r.id));
   });
 }
 
-function renderActivity() {
-  const section = document.getElementById('activity-section');
-  if (state.matches.length === 0) { section.style.display = 'none'; return; }
-  section.style.display = 'block';
-  const div = document.getElementById('activity');
-  const recent = [...state.matches].sort((a,b) => b.ts - a.ts).slice(0, 30);
-  div.innerHTML = recent.map(m => {
-    const p = state.players.find(x => x.id === m.playerId);
-    if (!p) return '';
-    return `<div class="activity-row">
-      <div class="activity-icon ${m.result.toLowerCase()}">${m.result}</div>
-      <div style="font-size:18px">${p.emoji}</div>
-      <div class="activity-name">${escapeHtml(p.name)} <span style="font-weight:400;color:#666">logged a ${m.result === 'W' ? 'win' : 'loss'}</span></div>
-      <div class="activity-ts">${fmtTime(m.ts)}</div>
-    </div>`;
-  }).join('');
+function renderRoster() {
+  const wrap = document.getElementById('roster');
+  if (state.players.length === 0) {
+    wrap.innerHTML = `<div class="empty-state" style="padding:14px"><p>No operators deployed. Add one above.</p></div>`;
+    return;
+  }
+  const career = careerStats(state.records);
+  const grid = document.createElement('div');
+  grid.className = 'roster-grid';
+  state.players.forEach(p => {
+    const c = career.get(p.id) || { matches: 0, elim: 0, deaths: 0, best: 0 };
+    const rank = rankFor(c.elim);
+    grid.insertAdjacentHTML('beforeend', `
+      <div class="roster-card">
+        <div class="roster-emoji">${p.emoji}</div>
+        <div class="roster-info">
+          <div class="roster-name">${escapeHtml(p.name)}</div>
+          <div class="roster-meta">${c.matches} matches · ${c.elim} career elim · best ${c.best}</div>
+          <div class="roster-badges">
+            <span class="badge rank" style="background:${rank.color}">${rank.name}</span>
+          </div>
+        </div>
+        <button class="danger tiny" data-rm="${p.id}" title="Remove operator">×</button>
+      </div>
+    `);
+  });
+  wrap.innerHTML = '';
+  wrap.appendChild(grid);
+  wrap.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => {
+    const p = state.players.find(x => x.id === b.dataset.rm);
+    if (p) confirmModal(`Remove ${p.name}?`, `This deletes ${p.name} and ALL their match records permanently.`, () => removePlayer(p.id));
+  });
+}
+
+function renderSubmitForm() {
+  const sel = document.getElementById('rec-player');
+  const cur = sel.value;
+  sel.innerHTML = state.players.map(p => `<option value="${p.id}">${p.emoji}  ${escapeHtml(p.name)}</option>`).join('');
+  if (cur && state.players.find(p => p.id === cur)) sel.value = cur;
+  const hasPlayers = state.players.length > 0;
+  document.getElementById('submit-btn').disabled = !hasPlayers;
+  document.getElementById('rec-elim').disabled = !hasPlayers;
+  document.getElementById('rec-deaths').disabled = !hasPlayers;
+  sel.disabled = !hasPlayers;
+  document.getElementById('submit-hint').style.display = hasPlayers ? 'none' : 'block';
 }
 
 function render() {
   document.getElementById('squad-name').value = state.squadName || 'MY SQUAD';
-  document.getElementById('stat-matches').textContent = state.matches.length;
+  document.getElementById('stat-records').textContent = state.records.length;
   document.getElementById('stat-players').textContent = state.players.length;
   document.getElementById('undo-btn').disabled = !lastAction;
-  const players = rankedPlayers();
-  renderPodium(players);
-  renderLeaderboard(players);
-  renderActivity();
-
-  // Read-only banner
+  renderHero();
+  renderPodium();
+  renderLeaderboard();
+  renderRoster();
+  renderSubmitForm();
   const ro = CONFIG.EDIT_PASSCODE && !editAuthorized;
   document.getElementById('readonly-banner').classList.toggle('show', !!ro);
   document.getElementById('passcode-btn').style.display = CONFIG.EDIT_PASSCODE ? '' : 'none';
@@ -808,12 +1011,8 @@ function confirmModal(title, body, onOk, opts) {
 
 function promptPasscode() {
   confirmModal('Enter Edit Passcode', 'Editing requires the squad passcode.', (val) => {
-    if (val === CONFIG.EDIT_PASSCODE) {
-      editAuthorized = true;
-      render();
-    } else {
-      alert('Wrong passcode.');
-    }
+    if (val === CONFIG.EDIT_PASSCODE) { editAuthorized = true; render(); }
+    else alert('Wrong passcode.');
   }, { input: true, password: true });
 }
 
@@ -844,6 +1043,19 @@ document.getElementById('new-name').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('add-btn').click();
 });
 
+document.getElementById('submit-form').addEventListener('submit', () => {
+  const pid = document.getElementById('rec-player').value;
+  const elim = parseInt(document.getElementById('rec-elim').value, 10);
+  const deaths = parseInt(document.getElementById('rec-deaths').value, 10);
+  if (!pid || isNaN(elim) || isNaN(deaths)) {
+    alert('Pick an operator and enter both eliminations and deaths.');
+    return;
+  }
+  logRecord(pid, elim, deaths);
+  document.getElementById('rec-elim').value = '';
+  document.getElementById('rec-deaths').value = '';
+});
+
 document.getElementById('squad-name').addEventListener('input', e => {
   if (!requireEdit()) { e.target.value = state.squadName; return; }
   state.squadName = e.target.value;
@@ -856,8 +1068,8 @@ document.getElementById('sync-indicator').onclick = pullLatest;
 
 document.getElementById('reset-btn').onclick = () => {
   if (!requireEdit()) return;
-  confirmModal('Wipe Everything?', 'This deletes all operators and all match history from the shared squad data. No recovery.', () => {
-    state = { squadName: 'MY SQUAD', players: [], matches: [] };
+  confirmModal('Wipe Everything?', 'Deletes ALL operators and ALL records from the shared squad data. No recovery.', () => {
+    state = { squadName: 'MY SQUAD', players: [], records: [] };
     lastAction = null;
     scheduleSave();
     render();
