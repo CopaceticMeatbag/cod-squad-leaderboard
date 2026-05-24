@@ -263,7 +263,7 @@ button.tiny { padding: 4px 8px; font-size: 10px; height: auto; }
 .lb-name { font-weight: 800; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; word-break: break-word; }
 .lb-badges { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .lb-elim { font-size: 18px; font-weight: 900; color: #2a3122; text-align: center; }
-.lb-deaths { font-size: 14px; font-weight: 800; color: #8a3a2a; text-align: center; }
+.lb-kills { font-size: 14px; font-weight: 800; color: #4a7c3a; text-align: center; }
 .lb-kd { font-size: 13px; font-weight: 800; color: #5a6b3e; text-align: center; }
 .lb-date { font-size: 11px; color: #666; }
 .lb-actions { display: flex; gap: 4px; justify-content: flex-end; }
@@ -395,7 +395,7 @@ button.tiny { padding: 4px 8px; font-size: 10px; height: auto; }
   .submit-form { grid-template-columns: 1fr 1fr; }
   .submit-form button { grid-column: 1 / -1; }
   .lb-row { grid-template-columns: 28px 36px 1fr 50px 60px 36px; gap: 6px; font-size: 12px; }
-  .lb-row .col-deaths, .lb-row .col-date { display: none; }
+  .lb-row .col-kills, .lb-row .col-date { display: none; }
   .podium { grid-template-columns: 1fr; }
   .hero-record { grid-template-columns: 1fr; text-align: center; }
 }
@@ -422,10 +422,13 @@ const ELIM_BADGES = [
   { min: 30,  name: 'Killstreak ⚡', cls: 'kill' },
   { min: 20,  name: 'On Fire 🔥',  cls: 'kill' }
 ];
-const KD_BADGES = [
-  { minRatio: 5.0, name: 'Untouchable 🛡️', cls: 'kd high' },
-  { minRatio: 3.0, name: 'Surgical ⚔️',    cls: 'kd high' },
-  { minRatio: 2.0, name: 'Lethal 🎯',      cls: 'kd' }
+// Finisher badges based on kill rate (kills/eliminations). Require minElim so a
+// 1-of-1 doesn't trivially earn a perfect-finisher badge.
+const FINISHER_BADGES = [
+  { minRate: 1.00, minElim: 15, name: '🎖️ Pure',         cls: 'flawless' },
+  { minRate: 0.90, minElim: 20, name: '🛡️ Closer',       cls: 'kd high' },
+  { minRate: 0.80, minElim: 20, name: '⚔️ Sharpshooter', cls: 'kd high' },
+  { minRate: 0.65, minElim: 15, name: '🎯 Solo Hunter',  cls: 'kd' }
 ];
 const REIGN_BADGES = [
   { minDays: 365, name: '🌟 LEGENDARY',  cls: 'legendary' },
@@ -493,8 +496,8 @@ const RANKS = [
       <input type="number" id="rec-elim" min="0" max="999" placeholder="0">
     </div>
     <div class="field">
-      <label for="rec-deaths">Deaths</label>
-      <input type="number" id="rec-deaths" min="0" max="999" placeholder="0">
+      <label for="rec-kills">Kills</label>
+      <input type="number" id="rec-kills" min="0" max="999" placeholder="0">
     </div>
     <button type="submit" id="submit-btn">+ Log Match</button>
   </form>
@@ -613,7 +616,8 @@ function normalize(s) {
       id: r.id,
       playerId: r.playerId,
       eliminations: Number(r.eliminations) || 0,
-      deaths: Number(r.deaths) || 0,
+      // 'kills' is current schema; fall back to legacy 'deaths' field as zero (cannot recover real kill count)
+      kills: r.kills != null ? Number(r.kills) || 0 : 0,
       ts: Number(r.ts) || Date.now()
     }))
   };
@@ -677,14 +681,15 @@ function fmtDaysHeld(days) {
   const d = Math.floor(days % 365);
   return y + 'y ' + d + 'd held';
 }
-function kdRatio(elim, deaths) {
-  if (deaths === 0) return elim > 0 ? Infinity : 0;
-  return elim / deaths;
+// Kill rate = kills / eliminations. Represents "finishing efficiency" -
+// what fraction of your elims were full solo kills vs assists.
+function killRate(elim, kills) {
+  if (elim === 0) return 0;
+  return Math.min(1, kills / elim);
 }
-function fmtKD(elim, deaths) {
-  const kd = kdRatio(elim, deaths);
-  if (!isFinite(kd)) return '∞';
-  return kd.toFixed(2);
+function fmtKillPct(elim, kills) {
+  if (elim === 0) return '—';
+  return Math.round(killRate(elim, kills) * 100) + '%';
 }
 
 function rankFor(careerKills) {
@@ -697,10 +702,11 @@ function elimBadge(elim) {
   for (const b of ELIM_BADGES) if (elim >= b.min) return b;
   return null;
 }
-function kdBadge(elim, deaths) {
-  const ratio = kdRatio(elim, deaths);
-  if (deaths === 0 && elim >= 10) return { name: '✨ Flawless', cls: 'flawless' };
-  for (const b of KD_BADGES) if (ratio >= b.minRatio) return b;
+function finisherBadge(elim, kills) {
+  const rate = killRate(elim, kills);
+  for (const b of FINISHER_BADGES) {
+    if (rate >= b.minRate && elim >= b.minElim) return b;
+  }
   return null;
 }
 function reignBadgeForDays(days) {
@@ -727,14 +733,14 @@ function computeReigns(records) {
   return map;
 }
 
-// Career stats per player (total elim, total matches)
+// Career stats per player (total elim, total kills, total matches, best single-match elim)
 function careerStats(records) {
   const map = new Map();
   for (const r of records) {
-    const cur = map.get(r.playerId) || { matches: 0, elim: 0, deaths: 0, best: 0 };
+    const cur = map.get(r.playerId) || { matches: 0, elim: 0, kills: 0, best: 0 };
     cur.matches++;
     cur.elim += r.eliminations;
-    cur.deaths += r.deaths;
+    cur.kills += r.kills;
     if (r.eliminations > cur.best) cur.best = r.eliminations;
     map.set(r.playerId, cur);
   }
@@ -744,9 +750,8 @@ function careerStats(records) {
 function sortedRecords(records) {
   return [...records].sort((a, b) => {
     if (b.eliminations !== a.eliminations) return b.eliminations - a.eliminations;
-    const ak = kdRatio(a.eliminations, a.deaths);
-    const bk = kdRatio(b.eliminations, b.deaths);
-    if (bk !== ak) return (bk === Infinity ? 1 : ak === Infinity ? -1 : bk - ak);
+    // Tiebreak on raw kills (full kills beat assist-heavy)
+    if (b.kills !== a.kills) return b.kills - a.kills;
     return a.ts - b.ts; // earlier record wins ties (got there first)
   });
 }
@@ -781,14 +786,18 @@ function removePlayer(id) {
   render();
 }
 
-function logRecord(playerId, elim, deaths) {
+function logRecord(playerId, elim, kills) {
   if (!requireEdit()) return;
   if (!state.players.find(p => p.id === playerId)) return;
+  const e = Math.max(0, Math.floor(elim) || 0);
+  let k = Math.max(0, Math.floor(kills) || 0);
+  // Kills cannot exceed eliminations (an elim includes the kill itself plus assists)
+  if (k > e) { alert('Kills cannot exceed eliminations. Adjusting kills down to ' + e + '.'); k = e; }
   const rec = {
     id: newId('r'),
     playerId,
-    eliminations: Math.max(0, Math.floor(elim) || 0),
-    deaths: Math.max(0, Math.floor(deaths) || 0),
+    eliminations: e,
+    kills: k,
     ts: Date.now()
   };
   state.records.push(rec);
@@ -819,7 +828,7 @@ function badgesForRecord(rec, reign) {
   const parts = [];
   const e = elimBadge(rec.eliminations);
   if (e) parts.push(`<span class="badge ${e.cls}">${e.name}</span>`);
-  const k = kdBadge(rec.eliminations, rec.deaths);
+  const k = finisherBadge(rec.eliminations, rec.kills);
   if (k) parts.push(`<span class="badge ${k.cls}">${k.name}</span>`);
   if (reign) {
     const reignBadge = reignBadgeForDays(reign.daysHeld);
@@ -841,12 +850,12 @@ function renderHero() {
   const reigns = computeReigns(state.records);
   const reign = reigns.get(top.id);
   const reignBadge = reign ? reignBadgeForDays(reign.daysHeld) : null;
-  const kdStr = fmtKD(top.eliminations, top.deaths);
+  const pctStr = fmtKillPct(top.eliminations, top.kills);
   document.getElementById('hero-record').innerHTML = `
     <div class="hero-emoji">${player.emoji}</div>
     <div class="hero-info">
       <div class="hero-name">${escapeHtml(player.name)}</div>
-      <div class="hero-score">${top.deaths} deaths · K/D ${kdStr} · set ${fmtDate(top.ts)}</div>
+      <div class="hero-score">${top.kills} kills · ${pctStr} finish · set ${fmtDate(top.ts)}</div>
       <div class="hero-badges">
         ${reignBadge ? `<span class="badge ${reignBadge.cls}">${reignBadge.name} · ${fmtDaysHeld(reign.daysHeld)}</span>` : ''}
         ${badgesForRecord(top, null)}
@@ -876,7 +885,7 @@ function renderPodium() {
       <div class="podium-emoji">${p.emoji}</div>
       <div class="podium-name">${escapeHtml(p.name)}</div>
       <div class="podium-score">${r.eliminations}</div>
-      <div class="podium-kd">${r.deaths} deaths · K/D ${fmtKD(r.eliminations, r.deaths)}</div>
+      <div class="podium-kd">${r.kills} kills · ${fmtKillPct(r.eliminations, r.kills)} finish</div>
     </div>`;
   }).join('');
 }
@@ -896,8 +905,8 @@ function renderLeaderboard() {
   let html = `<div class="lb-row head">
     <div>#</div><div></div><div>Operator / Badges</div>
     <div style="text-align:center">Elim</div>
-    <div style="text-align:center" class="col-deaths">Deaths</div>
-    <div style="text-align:center">K/D</div>
+    <div style="text-align:center" class="col-kills">Kills</div>
+    <div style="text-align:center">Finish</div>
     <div class="col-date">Date</div>
     <div></div>
   </div>`;
@@ -913,8 +922,8 @@ function renderLeaderboard() {
         <div class="lb-badges">${badgesForRecord(r, reign)}</div>
       </div>
       <div class="lb-elim">${r.eliminations}</div>
-      <div class="lb-deaths col-deaths">${r.deaths}</div>
-      <div class="lb-kd">${fmtKD(r.eliminations, r.deaths)}</div>
+      <div class="lb-kills col-kills">${r.kills}</div>
+      <div class="lb-kd">${fmtKillPct(r.eliminations, r.kills)}</div>
       <div class="lb-date col-date">${fmtDate(r.ts)}</div>
       <div class="lb-actions"><button class="danger tiny" data-del-rec="${r.id}" title="Delete record">×</button></div>
     </div>`;
@@ -938,14 +947,14 @@ function renderRoster() {
   const grid = document.createElement('div');
   grid.className = 'roster-grid';
   state.players.forEach(p => {
-    const c = career.get(p.id) || { matches: 0, elim: 0, deaths: 0, best: 0 };
+    const c = career.get(p.id) || { matches: 0, elim: 0, kills: 0, best: 0 };
     const rank = rankFor(c.elim);
     grid.insertAdjacentHTML('beforeend', `
       <div class="roster-card">
         <div class="roster-emoji">${p.emoji}</div>
         <div class="roster-info">
           <div class="roster-name">${escapeHtml(p.name)}</div>
-          <div class="roster-meta">${c.matches} matches · ${c.elim} career elim · best ${c.best}</div>
+          <div class="roster-meta">${c.matches} matches · ${c.elim} elim · ${c.kills} kills · PB ${c.best}</div>
           <div class="roster-badges">
             <span class="badge rank" style="background:${rank.color}">${rank.name}</span>
           </div>
@@ -970,7 +979,7 @@ function renderSubmitForm() {
   const hasPlayers = state.players.length > 0;
   document.getElementById('submit-btn').disabled = !hasPlayers;
   document.getElementById('rec-elim').disabled = !hasPlayers;
-  document.getElementById('rec-deaths').disabled = !hasPlayers;
+  document.getElementById('rec-kills').disabled = !hasPlayers;
   sel.disabled = !hasPlayers;
   document.getElementById('submit-hint').style.display = hasPlayers ? 'none' : 'block';
 }
@@ -1046,14 +1055,14 @@ document.getElementById('new-name').addEventListener('keydown', e => {
 document.getElementById('submit-form').addEventListener('submit', () => {
   const pid = document.getElementById('rec-player').value;
   const elim = parseInt(document.getElementById('rec-elim').value, 10);
-  const deaths = parseInt(document.getElementById('rec-deaths').value, 10);
-  if (!pid || isNaN(elim) || isNaN(deaths)) {
-    alert('Pick an operator and enter both eliminations and deaths.');
+  const kills = parseInt(document.getElementById('rec-kills').value, 10);
+  if (!pid || isNaN(elim) || isNaN(kills)) {
+    alert('Pick an operator and enter both eliminations and kills.');
     return;
   }
-  logRecord(pid, elim, deaths);
+  logRecord(pid, elim, kills);
   document.getElementById('rec-elim').value = '';
-  document.getElementById('rec-deaths').value = '';
+  document.getElementById('rec-kills').value = '';
 });
 
 document.getElementById('squad-name').addEventListener('input', e => {
