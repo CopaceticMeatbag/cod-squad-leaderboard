@@ -408,8 +408,10 @@ button.tiny { padding: 4px 8px; font-size: 10px; height: auto; }
 <!-- ====================================================================== -->
 <script>
 const CONFIG = {
-  BIN_ID:     '6a12cb3d6610dd3ae898d9ef',
-  ACCESS_KEY: '$2a$10$ITsDz1whpUlLvqKwox9nPOF6piJ62dvKMxj5kjvXrd0vmgWXWnDfS',
+  // Supabase project URL, e.g. 'https://abcdefgh.supabase.co'
+  SUPABASE_URL: 'PASTE_SUPABASE_URL_HERE',
+  // Supabase anon (public) key — NOT the service_role key
+  SUPABASE_KEY: 'PASTE_SUPABASE_ANON_KEY_HERE',
   // Empty string '' = anyone can edit. Set a passcode to gate editing.
   EDIT_PASSCODE: 'iridescent'
 };
@@ -549,14 +551,14 @@ const RANKS = [
 <div class="setup" id="setup">
   <div class="setup-box">
     <h2>Setup Required</h2>
-    <p>Configure your JSONBin credentials in the CONFIG block at the top of index.html.</p>
+    <p>Paste your Supabase URL and anon key into the CONFIG block at the top of index.html, then push to GitHub.</p>
   </div>
 </div>
 
 <script>
 const EMOJI_OPTIONS = ['🎯','💀','🔫','🪖','⚔️','🛡️','💣','🔥','⚡','☢️','🏴‍☠️','🦅','🐺','🐉','👹','😈','🤖','👻','🃏','🎮','🥷','🧨','🦾','🚁'];
-const API_BASE = 'https://api.jsonbin.io/v3/b/';
 const POLL_INTERVAL_MS = 15000;
+const SUPABASE_ROW_ID = 1; // single-row table; we always read/write id=1
 
 let state = { squadName: 'MY SQUAD', players: [], records: [] };
 let lastAction = null;
@@ -565,8 +567,15 @@ let pendingSave = null;
 let editAuthorized = false;
 
 function isConfigured() {
-  return CONFIG.BIN_ID && CONFIG.BIN_ID !== 'PASTE_YOUR_BIN_ID_HERE'
-      && CONFIG.ACCESS_KEY && CONFIG.ACCESS_KEY !== 'PASTE_YOUR_ACCESS_KEY_HERE';
+  return CONFIG.SUPABASE_URL && CONFIG.SUPABASE_URL !== 'https://xyfuhwadfcqfqhuhgvml.supabase.co'
+      && CONFIG.SUPABASE_KEY && CONFIG.SUPABASE_KEY !== 'sb_publishable_xe9tk0LXFckMn9b2GmrBSA_Ob57Uq10';
+}
+
+function supabaseHeaders(extra) {
+  return Object.assign({
+    'apikey': CONFIG.SUPABASE_KEY,
+    'Authorization': 'Bearer ' + CONFIG.SUPABASE_KEY
+  }, extra || {});
 }
 if (!isConfigured()) document.getElementById('setup').classList.add('open');
 
@@ -580,28 +589,38 @@ function setSync(status, text) {
 async function apiGet() {
   setSync('syncing', 'Syncing...');
   try {
-    const res = await fetch(API_BASE + CONFIG.BIN_ID + '/latest', {
-      headers: { 'X-Access-Key': CONFIG.ACCESS_KEY }
-    });
-    if (!res.ok) throw new Error('GET ' + res.status);
-    const data = await res.json();
+    const url = CONFIG.SUPABASE_URL + '/rest/v1/squad_state?id=eq.' + SUPABASE_ROW_ID + '&select=data';
+    const res = await fetch(url, { headers: supabaseHeaders() });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error('GET ' + res.status + ': ' + body);
+    }
+    const rows = await res.json();
     setSync('idle', 'Synced');
-    return data.record;
-  } catch (e) { setSync('error', 'Offline'); console.error(e); return null; }
+    // Single-row table; rows[0] should exist. If not, treat as empty state.
+    return rows && rows[0] ? rows[0].data : null;
+  } catch (e) { setSync('error', 'Offline'); console.error('[apiGet]', e); return null; }
 }
 
 async function apiPut(payload) {
   setSync('syncing', 'Saving...');
   try {
-    const res = await fetch(API_BASE + CONFIG.BIN_ID, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Access-Key': CONFIG.ACCESS_KEY },
-      body: JSON.stringify(payload)
+    const url = CONFIG.SUPABASE_URL + '/rest/v1/squad_state?id=eq.' + SUPABASE_ROW_ID;
+    const res = await fetch(url, {
+      method: 'PATCH',
+      headers: supabaseHeaders({
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      }),
+      body: JSON.stringify({ data: payload, updated_at: new Date().toISOString() })
     });
-    if (!res.ok) throw new Error('PUT ' + res.status);
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error('PATCH ' + res.status + ': ' + body);
+    }
     setSync('idle', 'Synced');
     return true;
-  } catch (e) { setSync('error', 'Save failed'); console.error(e); return false; }
+  } catch (e) { setSync('error', 'Save failed'); console.error('[apiPut]', e); return false; }
 }
 
 // Normalize: strip legacy fields, ensure new schema
